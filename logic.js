@@ -1,114 +1,86 @@
-//In this assignment, I will use the giphy API to create a dynamic web page
-//that populates based ont eh value passed into it through text
-
-
-//create an array to hold the button
-
 $(document).ready(function () {
-
+    console.log("test");
     let sports = ["Soccer", "Skiing", "Basketball", "Football"];
 
-    // This will be a function to make the button and add them to the page
+    // Generic function for capturing the movie name from the data-attribute
+    function displaySportsInfo() {
 
-    function populateButtons(arrayToUSe, classToAdd, areaToAddTo) {
-
-        $(areaToAddTo).empty();
-
-        for (let i = 0; i < arrayToUSe.length; i++) {
-
-            let a = $("<button>");
-            a.addClass(classToAdd);
-            a.attr("data-type", arrayToUSe[i]);
-            a.text(arrayToUSe[i]);
-            $(areaToAddTo).append(a);
-
-        }
-
-    }
-
-
-    // Create a function that will populate the images from the Giphy API 
-
-    $(document).on("click", ".sports-buttons", function () {
-        $("#images").empty();
-
-        $(".sports-buttons").removeClass("active");
-        $(this).addClass("active");
-
-        let type = $(this).attr("data-type");
-        let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=QJ2l5Ms5VrGfncNQMZGkNjUDewZiLmeO&q=sports";
-
-        //Ajax Call
+        let sports = $(this).attr("data-name");
+        let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + sports + "&api_key=QJ2l5Ms5VrGfncNQMZGkNjUDewZiLmeO&q=sports";
 
         $.ajax({
-
                 url: queryURL,
                 method: "GET"
-
             })
 
             .then(function (response) {
                 console.log(response);
-                let results = response.data;
 
+                //Creating a div to hold the sports image
+                let sportsDiv = $("<div class='sports'>");
+                //Retrieving the URL for the image
+                let imgURL = response.embeded_url;
+                //Creating an element to hold the image
+                let image = $("<img>").attr("src", imgURL);
+                //Appending the image
+                sportsDiv.append(image);
+                //Putting the sports image abov the previous image
+                $("#gifs").append(sportsDiv);
 
-                for (var i = 0; i < results.length; i++) {
-                    let sportsDiv = $("<div class=\"sports-item\">");
-
-                    let rating = results[i].rating;
-
-                    let p = $("<p>").text("Rating: " + rating);
-
-                    let animated = results[i].images.fixed_height.url;
-                    let still = results[i].images.fixed_height_still.url;
-
-                    let sportsImage = $("<img>");
-                    sportsImage.attr("src", still);
-                    sportsImage.attr("data-still", still);
-                    sportsImage.attr("data-animate", animated);
-                    sportsImage.attr("data-state", "still");
-                    sportsImage.addClass("food-image");
-
-                    sportsDiv.append(p);
-                    sports.Div.append(sportsImage);
-
-                    $("#images").append(sportsDiv);
-
-                }
+                //Testing display in HTML
+                let test = $("<p>").text("this is a test");
+                sportsDiv.append(test);
 
             });
+    }
 
-    });
+    // Function for displaying sports data
 
-    //Set the state from still to animated when clicking individual images
+    function renderButtons() {
 
-    $(document).on("click", ".sports-image", function () {
-        console.log("hello");
+        // Deleting the sports buttons prior to adding new sports buttons
+        // (this is necessary otherwise we will have repeat buttons)
+        $("#images").empty();
 
-        let state = $(this).attr("data-state");
+        // Looping through the array of sports
+        for (var i = 0; i < sports.length; i++) {
 
-        if (state === "still") {
-            $(this).attr("src", $(this).attr("data-animate"));
-            $(this).attr("data-state", animate);
-        } else {
+            // Then dynamicaly generating buttons for each sports type in the array.
+            // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
+            var a = $("<button>");
+            // Adding a class
+            a.addClass("sports");
+            // Adding a data-attribute with a value of the movie at index i
+            a.attr("data-name", sports[i]);
+            // Providing the button's text with a value of the movie at index i
+            a.text(sports[i]);
+            // Adding the button to the HTML
+            $("#images").append(a);
 
-            $(this).attr("src", $(this).attr("data-still"));
-            $(this).attr("data-state", "still");
         }
+    }
 
-    });
-
+    // This function handles events where one button is clicked
     $("#add-sports").on("click", function (event) {
+        // event.preventDefault() prevents the form from trying to submit itself.
+        // We're using a form so that the user can hit enter instead of clicking the button if they want
         event.preventDefault();
-        let newSports = $("input").eq(0).val();
 
-        if (newSports.length > 2) {
-            sports.push(newFood);
-        }
+        // This line will grab the text from the input box
+        var sport = $("#sports-input").val().trim();
+        // The sports categor from the textbox is then added to our array
+        sports.push(sport);
 
-        populateButtons(sports, "sports-buttons", "#sports-buttons");
-
+        // calling renderButtons which handles the processing of our movie array
+        renderButtons();
     });
-    populateButtons(sports, "sports-buttons", "#sports-buttons");
 
-});
+    // Function for displaying the sports info
+    // We're adding a click event listener to all elements with the class "sports"
+    // We're adding the event listener to the document because it will work for dynamically generated elements
+    // $(".sports").on("click") will only add listeners to elements that are on the page at that time
+    $(document).on("click", ".sports", displaySportsInfo);
+
+    // Calling the renderButtons function at least once to display the initial list of movies
+    renderButtons();
+})
