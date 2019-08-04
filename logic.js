@@ -16,20 +16,23 @@ $(document).ready(function () {
             .then(function (response) {
                 console.log(response);
 
-                //Creating a div to hold the sports image
-                let sportsDiv = $("<div class='sports'>");
-                //Retrieving the URL for the image
-                let imgURL = response.embeded_url;
-                //Creating an element to hold the image
-                let image = $("<img>").attr("src", imgURL);
-                //Appending the image
-                sportsDiv.append(image);
-                //Putting the sports image abov the previous image
-                $("#gifs").append(sportsDiv);
+                // Saving the image_original_url property
+
+                let imageURL = response.data.image_original_url;
+
+                // Creating and storing an image tag
+                var sportsImage = $("<img>");
+
+                // Setting the catImage src attribute to imageUrl
+                sportsImage.attr("src", imageURL);
+                sportsImage.attr("alt", "sports image");
+
+                // Apprending the sportsImage to the images div
+                $("#images").append(sportsImage);
 
                 //Testing display in HTML
-                let test = $("<p>").text("this is a test");
-                sportsDiv.append(test);
+                // let test = $("<p>").text("this is a test");
+                // sportsDiv.append(test);
 
             });
     }
