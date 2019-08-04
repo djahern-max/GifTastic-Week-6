@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    console.log("test");
     let sports = ["Soccer", "Skiing", "Basketball", "Football"];
 
     // Generic function for capturing the movie name from the data-attribute
@@ -16,23 +15,34 @@ $(document).ready(function () {
             .then(function (response) {
                 console.log(response);
 
+
                 // Saving the image_original_url property
 
-                let imageURL = response.data.image_original_url;
+                var imageUrl = response.data;
 
-                // Creating and storing an image tag
-                var sportsImage = $("<img>");
+                for (let i = 0; i < imageUrl.length; i++) {
 
-                // Setting the catImage src attribute to imageUrl
-                sportsImage.attr("src", imageURL);
-                sportsImage.attr("alt", "sports image");
+                    // Creating and storing an image tag
+                    var sportsImage = $("<img>");
 
-                // Apprending the sportsImage to the images div
-                $("#images").append(sportsImage);
+                    // Setting the Image src attribute to mageUrl
+                    var gifURL = imageUrl[i].images.fixed_height_still.url;
+                    var gif = $("<img>");
+                    gif.attr('src', gifURL);
+                    gif.attr('data-still', imageUrl[i].images.fixed_height_still.url);
+                    gif.attr('data-animate', imageUrl[i].images.fixed_height.url);
+                    gif.attr('data-state', 'still');
+                    gif.addClass('animate-gif');
 
-                //Testing display in HTML
-                // let test = $("<p>").text("this is a test");
-                // sportsDiv.append(test);
+                    sportsImage.append(gif);
+
+                    $("gifs").prepend(sportsImage);
+
+                    // Testing display in HTML
+                    // let test = $("<p>").text("this is a test");
+                    // sportsDiv.append(test);
+
+                }
 
             });
     }
