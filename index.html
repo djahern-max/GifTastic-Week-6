@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Giphy Homework 6</title>
-</head>
-<body>
-    
-<h1>Sports</h1>
-<br>
 
-<form id = "sports-form">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Giphy Homework 6</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- <h1>Sports</h1>
+  <br>
+
+  <form id="sports-form">
 
 
     <label for="sports-input">Add some sports pictures</label>
@@ -19,24 +22,31 @@
     <br>
     <input type="add-sports" type="submit" value="Submit">
 
-</form>
+  </form>
 
-<div id="sports-buttons">
-
-
-</div>
-
-<div id="images">
+  <div id="sports-buttons">
 
 
-</div>
+  </div> -->
 
-<script
-  src="https://code.jquery.com/jquery-3.4.1.js"
-  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-  crossorigin="anonymous"></script>
+  <h1>Sports Search</h1>
 
-  <script src="logic.js"></script>
+  <div id="images"></div>
+
+  <form id="sports-form" class="layout">
+    <label for="sports-input">Add Your Favorie Sport!</label>
+    <input type="text" id="sports-input"><br>
+
+    <!-- Button triggers new movie to be added -->
+    <input id="add-sports" type="submit" value="Add Sports!">
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+
+  <!-- <script src="logic.js"></script> -->
+  <script src="logicV2.js"></script>
 
 </body>
+
 </html>
