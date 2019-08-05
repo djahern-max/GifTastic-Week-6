@@ -5,7 +5,7 @@ $(document).ready(function () {
     function displaySportsInfo() {
 
         let sports = $(this).attr("data-name");
-        let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + sports + "&api_key=QJ2l5Ms5VrGfncNQMZGkNjUDewZiLmeO&q=sports";
+        let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + sports + "&api_key=QJ2l5Ms5VrGfncNQMZGkNjUDewZiLmeO&limit=10";
 
         $.ajax({
                 url: queryURL,
