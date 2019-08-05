@@ -15,32 +15,42 @@ $(document).ready(function () {
             .then(function (response) {
                 console.log(response);
 
+                if (response.pagination.total_count == 0) {
+                    alert("There aren not any GIFS for this topic");
+                    let gifList = topics.indexOf(topic);
+                    // otherwise display button
+                    if (gifList > -1) {
+                        topics.splice(gifList, 1);
+                        renderButtons();
+                    }
+                }
 
-                // Saving the image_original_url property
 
-                var imageUrl = response.data;
+                let results = response.data;
 
-                for (let i = 0; i < imageUrl.length; i++) {
+                for (let i = 0; i < results.length; i++) {
 
                     // Creating and storing an image tag
-                    var sportsImage = $("<img>");
+                    let sportsImage = $("<div class='gif-name'>");
+
+                    let pRating = $('<p>').text('Rating: ' + results[i].rating.toUpperCase());
+
+                    let pTitle = $('<p>').text('Title: ' + results[i].title.toUpperCase());
 
                     // Setting the Image src attribute to mageUrl
-                    var gifURL = imageUrl[i].images.fixed_height_still.url;
-                    var gif = $("<img>");
+                    let gifURL = results[i].images.fixed_height_still.url;
+                    let gif = $('<img>');
                     gif.attr('src', gifURL);
-                    gif.attr('data-still', imageUrl[i].images.fixed_height_still.url);
-                    gif.attr('data-animate', imageUrl[i].images.fixed_height.url);
+                    gif.attr('data-still', results[i].images.fixed_height_still.url);
+                    gif.attr('data-animate', results[i].images.fixed_height.url);
                     gif.attr('data-state', 'still');
                     gif.addClass('animate-gif');
 
+
+                    sportsImage.append(pRating);
+                    sportsImage.append(pTitle);
                     sportsImage.append(gif);
-
-                    $("gifs").prepend(sportsImage);
-
-                    // Testing display in HTML
-                    // let test = $("<p>").text("this is a test");
-                    // sportsDiv.append(test);
+                    $('#gif').prepend(sportsImage);
 
                 }
 
@@ -53,14 +63,14 @@ $(document).ready(function () {
 
         // Deleting the sports buttons prior to adding new sports buttons
         // (this is necessary otherwise we will have repeat buttons)
-        $("#images").empty();
+        $("#buttons").empty();
 
         // Looping through the array of sports
-        for (var i = 0; i < sports.length; i++) {
+        for (let i = 0; i < sports.length; i++) {
 
             // Then dynamicaly generating buttons for each sports type in the array.
             // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
-            var a = $("<button>");
+            let a = $("<button>");
             // Adding a class
             a.addClass("sports");
             // Adding a data-attribute with a value of the movie at index i
@@ -68,8 +78,20 @@ $(document).ready(function () {
             // Providing the button's text with a value of the movie at index i
             a.text(sports[i]);
             // Adding the button to the HTML
-            $("#images").append(a);
+            $("#buttons").append(a);
 
+        }
+    }
+
+    // Function to play or still Gif images
+    function playGif() {
+        let state = $(this).attr('data-state');
+        if (state === 'still') {
+            $(this).attr('src', $(this).attr('data-animate'));
+            $(this).attr('data-state', 'animate');
+        } else {
+            $(this).attr('src', $(this).attr('data-still'));
+            $(this).attr('data-state', 'still');
         }
     }
 
@@ -80,7 +102,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         // This line will grab the text from the input box
-        var sport = $("#sports-input").val().trim();
+        let sport = $("#sports-input").val().trim();
         // The sports categor from the textbox is then added to our array
         sports.push(sport);
 
@@ -88,11 +110,10 @@ $(document).ready(function () {
         renderButtons();
     });
 
-    // Function for displaying the sports info
-    // We're adding a click event listener to all elements with the class "sports"
-    // We're adding the event listener to the document because it will work for dynamically generated elements
-    // $(".sports").on("click") will only add listeners to elements that are on the page at that time
+    //click button to display Gifs from the API
     $(document).on("click", ".sports", displaySportsInfo);
+    //click Gif to Animate.  Click to make it still.
+    $(document).on("click", ".animate-gif", playGif);
 
     // Calling the renderButtons function at least once to display the initial list of movies
     renderButtons();
