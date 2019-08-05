@@ -15,29 +15,18 @@ $(document).ready(function () {
             .then(function (response) {
                 console.log(response);
 
-                if (response.pagination.total_count == 0) {
-                    alert("There aren not any GIFS for this topic");
-                    let gifList = topics.indexOf(topic);
-                    // otherwise display button
-                    if (gifList > -1) {
-                        topics.splice(gifList, 1);
-                        renderButtons();
-                    }
-                }
-
-
+                //Save results from API to variable "results"
                 let results = response.data;
 
                 for (let i = 0; i < results.length; i++) {
 
-                    // Creating and storing an image tag
+                    // Create a new DIV
                     let sportsImage = $("<div class='gif-name'>");
-
+                    // States what GIF is rated
                     let pRating = $('<p>').text('Rating: ' + results[i].rating.toUpperCase());
-
+                    // States GIF title
                     let pTitle = $('<p>').text('Title: ' + results[i].title.toUpperCase());
-
-                    // Setting the Image src attribute to mageUrl
+                    // Locates the GIF URL
                     let gifURL = results[i].images.fixed_height_still.url;
                     let gif = $('<img>');
                     gif.attr('src', gifURL);
@@ -45,11 +34,11 @@ $(document).ready(function () {
                     gif.attr('data-animate', results[i].images.fixed_height.url);
                     gif.attr('data-state', 'still');
                     gif.addClass('animate-gif');
-
-
+                    // Apends info
                     sportsImage.append(pRating);
                     sportsImage.append(pTitle);
                     sportsImage.append(gif);
+                    // Puts the saved info into GIF Div
                     $('#gif').prepend(sportsImage);
 
                 }
@@ -57,7 +46,7 @@ $(document).ready(function () {
             });
     }
 
-    // Function for displaying sports data
+    // Function for displaying buttons
 
     function renderButtons() {
 
@@ -69,7 +58,6 @@ $(document).ready(function () {
         for (let i = 0; i < sports.length; i++) {
 
             // Then dynamicaly generating buttons for each sports type in the array.
-            // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
             let a = $("<button>");
             // Adding a class
             a.addClass("sports");
@@ -83,7 +71,7 @@ $(document).ready(function () {
         }
     }
 
-    // Function to play or still Gif images
+    // Function to play or make still Gif images
     function playGif() {
         let state = $(this).attr('data-state');
         if (state === 'still') {
@@ -98,12 +86,10 @@ $(document).ready(function () {
     // This function handles events where one button is clicked
     $("#add-sports").on("click", function (event) {
         // event.preventDefault() prevents the form from trying to submit itself.
-        // We're using a form so that the user can hit enter instead of clicking the button if they want
         event.preventDefault();
-
         // This line will grab the text from the input box
         let sport = $("#sports-input").val().trim();
-        // The sports categor from the textbox is then added to our array
+        // The sports category from the textbox is then added to our array
         sports.push(sport);
 
         // calling renderButtons which handles the processing of our movie array
